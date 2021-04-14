@@ -1,7 +1,8 @@
 import dotenv from 'dotenv';
 import { resolve } from 'path';
 
-dotenv.config();
+// eslint-disable-next-line no-path-concat
+dotenv.config({ path: `${__dirname}../.env` });
 
 import './database';
 import express from 'express';
