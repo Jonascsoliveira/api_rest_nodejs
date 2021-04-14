@@ -1,11 +1,17 @@
 import Aluno from '../models/Aluno';
+import File from '../models/File';
 
 class AlunoController {
   async index(req, res) {
-    const alunos = await Aluno.findAll();
-    res.json({
-      alunos,
+    const alunos = await Aluno.findAll({
+      attributes: ['id', 'nome', 'sobrenome', 'email', 'idade', 'peso', 'altura'],
+      order: [['id', 'DESC'], [File, 'id', 'DESC']],
+      include: {
+        model: File,
+        attributes: ['id', 'filename', 'originalname', 'url'],
+      },
     });
+    res.json({ alunos });
   }
 
   async store(req, res) {
@@ -30,7 +36,14 @@ class AlunoController {
         });
       }
 
-      const aluno = await Aluno.findByPk(id);
+      const aluno = await Aluno.findByPk(id, {
+        attributes: ['id', 'nome', 'sobrenome', 'email', 'idade', 'peso', 'altura'],
+        order: [['id', 'DESC'], [File, 'id', 'DESC']],
+        include: {
+          model: File,
+          attributes: ['id', 'filename', 'originalname', 'url'],
+        },
+      });
 
       if (!aluno) {
         return res.status(400).json({
